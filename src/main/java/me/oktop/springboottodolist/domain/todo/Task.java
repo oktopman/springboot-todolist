@@ -5,8 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.oktop.springboottodolist.domain.BaseTimeEntity;
 import me.oktop.springboottodolist.enums.TaskStatus;
-import me.oktop.springboottodolist.web.dto.TodoDto;
-import org.springframework.beans.BeanUtils;
+import me.oktop.springboottodolist.web.dto.TaskDto;
+import me.oktop.springboottodolist.web.vo.TodoVo;
+import org.modelmapper.ModelMapper;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -48,9 +49,15 @@ public class Task extends BaseTimeEntity {
         this.expectedDate = expectedDate;
     }
 
-    public TodoDto toDto() {
-        TodoDto dto = new TodoDto();
-        BeanUtils.copyProperties(this, dto);
-        return dto;
+    public void update(TodoVo vo) {
+        this.title = vo.getTitle();
+        this.content = vo.getContent();
+        this.expectedDate = vo.getExpectedDate();
+        this.status = vo.getStatus();
+
+    }
+
+    public TaskDto toDto(ModelMapper modelMapper) {
+        return modelMapper.map(this, TaskDto.class);
     }
 }

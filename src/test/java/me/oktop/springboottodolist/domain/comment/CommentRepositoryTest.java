@@ -29,25 +29,6 @@ public class CommentRepositoryTest {
     @Test
     void comment_저장후조회_테스트() {
         //given
-        Comment comment = Comment.builder()
-                .content("코멘트저장")
-                .build();
-        
-        commentRepository.save(comment);
-        
-        //when
-        Comment getComment = commentRepository.findById(1L)
-                .orElseThrow(EntityNotFoundException::new);
-
-        //then
-        assertNotNull(getComment);
-        assertThat(getComment.getContent(), is("코멘트저장"));
-
-    }
-
-    @Test
-    void task와comment함께_저장후조회_테스트() {
-        //given
         String title = "todolist 만들기";
         String content = "차근차근 요구사항 추가 시키면서 만들어보자~";
         TaskStatus status = TaskStatus.TODO;
@@ -57,6 +38,8 @@ public class CommentRepositoryTest {
                 .content(content)
                 .status(status)
                 .build();
+
+        task.setExpectedDate(expectedDate);
 
         Comment comment = Comment.builder()
                 .content("추가적으로 코멘트도 저장하기")
@@ -81,6 +64,7 @@ public class CommentRepositoryTest {
         assertThat(getTask.getTitle(), is(title));
         assertThat(getTask.getContent(), is(content));
         assertThat(getTask.getStatus(), is(status));
+        assertThat(getTask.getExpectedDate(), is(expectedDate));
         assertThat(getTask.getComments().size(), is(equalTo(2)));
         assertThat(getTask.getComments().get(0).getContent(), is("추가적으로 코멘트도 저장하기"));
         assertThat(getTask.getComments().get(1).getContent(), is("추가2번"));

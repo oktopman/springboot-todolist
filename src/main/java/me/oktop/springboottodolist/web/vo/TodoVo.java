@@ -1,20 +1,27 @@
-package me.oktop.springboottodolist.web.dto;
+package me.oktop.springboottodolist.web.vo;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import me.oktop.springboottodolist.enums.TaskStatus;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
-import java.util.List;
 
+@NoArgsConstructor
 @Getter
 @Setter
-public class TaskDto {
+public class TodoVo {
 
+    @NotNull
     private Long id;
+
     private String title;
+
     private String content;
-    private TaskStatus status;
+
     private LocalDate expectedDate;
-    private List<CommentDto> comments;
+
+    private TaskStatus status;
+
 }
