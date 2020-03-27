@@ -1,10 +1,9 @@
-package me.oktop.springboottodolist.domain.comment;
+package me.oktop.springboottodolist.domain.todo;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.oktop.springboottodolist.domain.BaseTimeEntity;
-import me.oktop.springboottodolist.domain.task.Task;
 
 import javax.persistence.*;
 

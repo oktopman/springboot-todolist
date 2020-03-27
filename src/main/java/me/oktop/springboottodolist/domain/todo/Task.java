@@ -1,10 +1,9 @@
-package me.oktop.springboottodolist.domain.task;
+package me.oktop.springboottodolist.domain.todo;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.oktop.springboottodolist.domain.BaseTimeEntity;
-import me.oktop.springboottodolist.domain.comment.Comment;
 import me.oktop.springboottodolist.enums.TaskStatus;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import org.springframework.beans.BeanUtils;

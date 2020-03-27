@@ -1,5 +1,7 @@
 package me.oktop.springboottodolist.domain.task;
 
+import me.oktop.springboottodolist.domain.todo.Task;
+import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.enums.TaskStatus;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

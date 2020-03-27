@@ -1,8 +1,8 @@
 package me.oktop.springboottodolist.service;
 
 import lombok.RequiredArgsConstructor;
-import me.oktop.springboottodolist.domain.task.Task;
-import me.oktop.springboottodolist.domain.task.TaskRepository;
+import me.oktop.springboottodolist.domain.todo.Task;
+import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -14,9 +14,14 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @Service
-public class TaskService {
+public class TodoService {
 
     private final TaskRepository taskRepository;
+
+    public void saveTodolist() {
+
+    }
+
 
     public Page<TodoDto> getTodolist(Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAll(pageable);
