@@ -5,6 +5,7 @@ import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.service.CommentService;
 import me.oktop.springboottodolist.web.dto.ResponseDto;
 import me.oktop.springboottodolist.web.vo.CommentVo;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,8 +16,8 @@ public class CommentRestController {
     private final CommentService commentService;
 
     @PostMapping("/comment")
-    public ResponseDto saveComment(CommentVo vo) {
+    public ResponseEntity saveComment(CommentVo vo) {
         Comment comment = commentService.saveComment(vo);
-        return ResponseDto.success(comment);
+        return ResponseEntity.ok(ResponseDto.success(comment));
     }
 }

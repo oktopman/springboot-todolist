@@ -9,6 +9,7 @@ import me.oktop.springboottodolist.web.vo.TaskVo;
 import me.oktop.springboottodolist.web.vo.TodoVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -21,23 +22,23 @@ public class TodoRestController {
     private final TodoService todoService;
 
     @GetMapping("/list")
-    public ResponseDto getTodolist(@RequestParam Integer page) {
+    public ResponseEntity getTodolist(@RequestParam Integer page) {
         int size = 10;
         PageRequest pageRequest = PageRequest.of(page, size);
         Page<TodoDto> todoDtoPage = todoService.getTodolist(pageRequest);
-        return ResponseDto.success(todoDtoPage);
+        return ResponseEntity.ok(ResponseDto.success(todoDtoPage));
     }
 
     @PostMapping
-    public ResponseDto saveTodo(@Valid @RequestBody TaskVo vo) {
+    public ResponseEntity saveTodo(@Valid @RequestBody TaskVo vo) {
         Task task = todoService.saveTask(vo);
-        return ResponseDto.success(task);
+        return ResponseEntity.ok(ResponseDto.success(task));
     }
 
     @PutMapping
-    public ResponseDto updateTodo(@Valid @RequestBody TodoVo vo) {
+    public ResponseEntity updateTodo(@Valid @RequestBody TodoVo vo) {
         Task task = todoService.updateTodo(vo);
-        return ResponseDto.success(task);
+        return ResponseEntity.ok(ResponseDto.success(task));
     }
 
 }
