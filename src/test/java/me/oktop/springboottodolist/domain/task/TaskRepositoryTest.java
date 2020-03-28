@@ -1,5 +1,7 @@
 package me.oktop.springboottodolist.domain.task;
 
+import me.oktop.springboottodolist.domain.todo.Comment;
+import me.oktop.springboottodolist.domain.todo.CommentRepository;
 import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.enums.TaskStatus;
@@ -9,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -26,6 +29,9 @@ public class TaskRepositoryTest {
 
     @Autowired
     TaskRepository taskRepository;
+
+    @Autowired
+    CommentRepository commentRepository;
 
     @Test
     void task_저장후조회_테스트() {
@@ -65,6 +71,51 @@ public class TaskRepositoryTest {
         //then
         assertThat(taskPage.getTotalElements(), is(equalTo(1L)));
         assertThat(taskPage.getContent().get(0).getContent(), is(content));
+    }
+
+    @Test
+    void task_삭제_테스트() {
+        //given
+        String commentString1 = "댓글1";
+        String commentString2 = "댓글2";
+        Task task = Task.builder()
+                .content(content)
+                .title(title)
+                .status(status)
+                .build();
+
+        Comment comment1 = Comment.builder()
+                .content(commentString1)
+                .build() ;
+
+        comment1.addTask(task);
+
+        Comment comment2 = Comment.builder()
+                .content(commentString2)
+                .build();
+
+        comment2.addTask(task);
+
+        Task saveTask = taskRepository.save(task);
+        commentRepository.save(comment1);
+        commentRepository.save(comment2);
+
+        //when
+        Task task1 = taskRepository.findById(saveTask.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        //verify
+        assertThat(task1.getTitle(), is(title));
+        assertThat(task1.getComments().get(0).getContent(), is(commentString1));
+        assertThat(task1.getComments().get(1).getContent(), is(commentString2));
+
+        taskRepository.delete(task1);
+
+        boolean isExits = commentRepository.existsById(task1.getComments().get(0).getId());
+        assertThat(isExits, is(false));
+
+//        taskRepository.findById(task1.getId())
+//                .orElseThrow(EntityNotFoundException::new);
     }
 
 }

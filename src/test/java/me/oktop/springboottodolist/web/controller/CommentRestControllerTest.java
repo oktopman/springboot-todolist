@@ -3,7 +3,6 @@ package me.oktop.springboottodolist.web.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.service.CommentService;
-import me.oktop.springboottodolist.web.vo.CommentVo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +18,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import static org.hamcrest.Matchers.is;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -56,6 +56,20 @@ public class CommentRestControllerTest {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.data.content", is("댓글입니다.")))
+                .andExpect(jsonPath("$.code", is("200")))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    void comment_삭제_테스트() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String content = objectMapper.writeValueAsString(1L);
+
+        mockMvc.perform(
+                delete("/comment/{id}", 1L)
+//                        .param("id", content)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
                 .andExpect(jsonPath("$.code", is("200")))
                 .andExpect(status().isOk());
     }

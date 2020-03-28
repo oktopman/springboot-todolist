@@ -59,4 +59,16 @@ public class CommentServiceTest {
         commentService.saveComment(vo);
     }
 
+    @Test
+    void 댓글_삭제_테스트() {
+        //given
+        Comment comment = Comment.builder()
+                .content("content...")
+                .build();
+
+        given(commentRepository.findById(any())).willReturn(java.util.Optional.ofNullable(comment));
+
+        commentService.deleteComment(1L);
+    }
+
 }

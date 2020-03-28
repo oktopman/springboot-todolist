@@ -33,7 +33,7 @@ public class Task extends BaseTimeEntity {
 
     private LocalDate expectedDate;
 
-    @OneToMany(mappedBy = "task")
+    @OneToMany(mappedBy = "task", cascade = CascadeType.ALL)
     private List<Comment> comments = new ArrayList<>();
 
     //todo author 추가

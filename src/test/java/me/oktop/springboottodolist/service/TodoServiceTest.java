@@ -100,4 +100,17 @@ public class TodoServiceTest {
         assertThat(todolistPage.getContent().get(0).getTask().getComments().get(1).getContent(), is(content2));
     }
 
+    @Test
+    void task_삭제_테스트() {
+        //given
+        Task task = Task.builder()
+                .title(title)
+                .content(content)
+                .status(status)
+                .build();
+
+        given(taskRepository.findById(1L)).willReturn(java.util.Optional.ofNullable(task));
+        todoService.deleteTodo(1L);
+    }
+
 }

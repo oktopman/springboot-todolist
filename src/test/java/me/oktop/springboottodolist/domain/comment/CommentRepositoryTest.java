@@ -70,4 +70,24 @@ public class CommentRepositoryTest {
         assertThat(getTask.getComments().get(1).getContent(), is("추가2번"));
     }
 
+    @Test
+    void comment_삭제_테스트() {
+        //given
+        String content = "차근차근 요구사항 추가 시키면서 만들어보자~";
+        Comment comment = Comment.builder()
+                .content(content)
+                .build();
+
+        Comment save = commentRepository.save(comment);
+        assertThat(save.getContent(), is(content));
+
+        //when
+        commentRepository.delete(save);
+
+        boolean isExits = commentRepository.existsById(save.getId());
+        assertThat(isExits, is(false));
+
+
+    }
+
 }

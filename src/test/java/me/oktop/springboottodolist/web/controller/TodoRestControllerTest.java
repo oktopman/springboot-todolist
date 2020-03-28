@@ -140,4 +140,17 @@ public class TodoRestControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    void todo_삭제_테스트() throws Exception {
+        mockMvc.perform(
+                delete("/todo/{id}", 1L)
+//                        .content("{\"id\":\1L, \"title\":\"title입니다.\", \"content\":\"content입니다.\"," +
+//                                " \"expectedDate\":\"2020-03-27\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andDo(print())
+                .andExpect(jsonPath("$.code", is("200")))
+                .andExpect(status().isOk());
+
+    }
+
 }

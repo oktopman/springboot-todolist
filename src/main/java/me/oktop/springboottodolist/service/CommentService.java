@@ -6,9 +6,11 @@ import me.oktop.springboottodolist.domain.todo.CommentRepository;
 import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.web.vo.CommentVo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 
+@Transactional
 @RequiredArgsConstructor
 @Service
 public class CommentService {
@@ -26,5 +28,12 @@ public class CommentService {
                 .build();
 
         return commentRepository.save(comment);
+    }
+
+    public void deleteComment(Long id) {
+        Comment comment = commentRepository.findById(id)
+                .orElseThrow(EntityNotFoundException::new);
+
+        commentRepository.delete(comment);
     }
 }

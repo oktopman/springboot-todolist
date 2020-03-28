@@ -29,16 +29,25 @@ public class TodoRestController {
         return ResponseEntity.ok(ResponseDto.success(todoDtoPage));
     }
 
+    //todo pk를 pathvariable로 빼기
     @PostMapping
     public ResponseEntity saveTodo(@Valid @RequestBody TaskVo vo) {
         Task task = todoService.saveTask(vo);
         return ResponseEntity.ok(ResponseDto.success(task));
     }
 
+    //todo pk를 pathvariable로 빼기
     @PutMapping
     public ResponseEntity updateTodo(@Valid @RequestBody TodoVo vo) {
         Task task = todoService.updateTodo(vo);
         return ResponseEntity.ok(ResponseDto.success(task));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteTodo(@PathVariable Long id) {
+        todoService.deleteTodo(id);
+        return ResponseEntity.ok(ResponseDto.success());
+    }
+
 
 }
