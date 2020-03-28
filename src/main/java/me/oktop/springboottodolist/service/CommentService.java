@@ -16,7 +16,7 @@ public class CommentService {
     private final TaskRepository taskRepository;
     private final CommentRepository commentRepository;
 
-    public void saveComment(CommentVo vo) {
+    public Comment saveComment(CommentVo vo) {
         boolean isExists = taskRepository.existsById(vo.getTaskId());
         if (!isExists) {
             throw new EntityNotFoundException();
@@ -25,6 +25,6 @@ public class CommentService {
                 .content(vo.getContent())
                 .build();
 
-        commentRepository.save(comment);
+        return commentRepository.save(comment);
     }
 }

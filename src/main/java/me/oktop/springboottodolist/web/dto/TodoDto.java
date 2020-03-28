@@ -9,5 +9,5 @@ import java.util.List;
 @Setter
 public class TodoDto {
 
-    private TaskDto tasks;
+    private TaskDto task;
 }

@@ -26,4 +26,9 @@ public class TaskVo {
         this.expectedDate = expectedDate;
     }
 
+    public TaskVo(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
 }

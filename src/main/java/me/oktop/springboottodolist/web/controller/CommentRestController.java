@@ -1,6 +1,7 @@
 package me.oktop.springboottodolist.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.service.CommentService;
 import me.oktop.springboottodolist.web.dto.ResponseDto;
 import me.oktop.springboottodolist.web.vo.CommentVo;
@@ -15,7 +16,7 @@ public class CommentRestController {
 
     @PostMapping("/comment")
     public ResponseDto saveComment(CommentVo vo) {
-        commentService.saveComment(vo);
-        return ResponseDto.success();
+        Comment comment = commentService.saveComment(vo);
+        return ResponseDto.success(comment);
     }
 }

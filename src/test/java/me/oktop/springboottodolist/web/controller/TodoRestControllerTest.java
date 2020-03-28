@@ -1,6 +1,7 @@
 package me.oktop.springboottodolist.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.enums.TaskStatus;
 import me.oktop.springboottodolist.service.TodoService;
 import me.oktop.springboottodolist.web.dto.CommentDto;
@@ -29,6 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -60,17 +62,24 @@ public class TodoRestControllerTest {
 
     @Test
     void todolist_저장_테스트() throws Exception {
-        TaskVo vo = new TaskVo(title, content, expectedDate);
-//        ObjectMapper objectMapper = new ObjectMapper();
-//        String content = objectMapper.writeValueAsString(vo);
+        TaskVo vo = new TaskVo(title, content);
+        Task mockTask = Task.builder()
+                .title(title)
+                .content(content)
+                .build();
+        mockTask.setExpectedDate(expectedDate);
+        given(todoService.saveTask(any())).willReturn(mockTask);
+        ObjectMapper objectMapper = new ObjectMapper();
+        String mockContent = objectMapper.writeValueAsString(vo);
         mockMvc.perform(
                 post("/todo")
-//                        .content(content)
-                        .content("{\"title\":\"title입니다\", \"content\":\"content입니다.\", \"expectedDate\":\"2020-03-27\"}")
+                        .content(mockContent)
+//                        .content("{\"title\":\"title입니다\", \"content\":\"content입니다.\", \"expectedDate\":\"2020-03-27\"}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.data.title", is(title)))
                 .andExpect(jsonPath("$.code", is("200")))
-                .andDo(print());
+                .andExpect(status().isOk());
     }
 
     @Test
@@ -80,14 +89,14 @@ public class TodoRestControllerTest {
         given(todoService.getTodolist(pageable)).willReturn(createMock());
 
         mockMvc.perform(
-                get("/todolist?page=" + page)
+                get("/todo/list?page=" + page)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.content[0].tasks.title", is("todolist 만들기")))
+                .andDo(print())
+                .andExpect(jsonPath("$.data.content[0].task.title", is("todolist 만들기")))
                 .andExpect(jsonPath("$.code", is("200")))
-                .andExpect(jsonPath("$.data.content[0].tasks.comments[0].content", is("댓글1")))
-                .andExpect(jsonPath("$.data.content[0].tasks.comments[1].content", is("댓글2")))
-                .andDo(print());
+                .andExpect(jsonPath("$.data.content[0].task.comments[0].content", is("댓글1")))
+                .andExpect(jsonPath("$.data.content[0].task.comments[1].content", is("댓글2")))
+                .andExpect(status().isOk());
     }
 
     private Page<TodoDto> createMock() {
@@ -107,7 +116,7 @@ public class TodoRestControllerTest {
         taskDto.setComments(commentDtoList);
 
         List<TodoDto> todoDtoList = new ArrayList<>();
-        todoDto.setTasks(taskDto);
+        todoDto.setTask(taskDto);
         todoDtoList.add(todoDto);
         Pageable pageable = PageRequest.of(0, 10);
         return new PageImpl<>(todoDtoList, pageable, 1);
@@ -129,7 +138,6 @@ public class TodoRestControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.code", is("200")))
                 .andDo(print());
-
     }
 
 }

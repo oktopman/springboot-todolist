@@ -1,6 +1,7 @@
 package me.oktop.springboottodolist.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.service.CommentService;
 import me.oktop.springboottodolist.web.vo.CommentVo;
 import org.junit.jupiter.api.BeforeEach;
@@ -16,6 +17,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -41,22 +44,20 @@ public class CommentRestControllerTest {
 
     @Test
     void comment_저장_테스트() throws Exception {
-        CommentVo vo = new CommentVo();
-        vo.setTaskId(1L);
-        vo.setCommentId(1L);
-        vo.setContent("댓글입니다.");
+        Comment comment = Comment.builder()
+                .content("댓글입니다.")
+                .build();
 
-        ObjectMapper objectMapper = new ObjectMapper();
-        String content = objectMapper.writeValueAsString(vo);
+        given(commentService.saveComment(any())).willReturn(comment);
 
         mockMvc.perform(
                 post("/comment")
-                        .content(content)
+                        .content("")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.data.content", is("댓글입니다.")))
                 .andExpect(jsonPath("$.code", is("200")))
-                .andDo(print());
-
+                .andExpect(status().isOk());
     }
 
 }

@@ -6,7 +6,6 @@ import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.enums.TaskStatus;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import me.oktop.springboottodolist.web.vo.TaskVo;
-import me.oktop.springboottodolist.web.vo.TodoVo;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -19,7 +18,6 @@ import org.springframework.data.domain.Pageable;
 
 import java.time.LocalDate;
 import java.util.Collections;
-import java.util.Optional;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
@@ -55,7 +53,12 @@ public class TodoServiceTest {
         mockTask.setExpectedDate(expectedDate);
 
         given(taskRepository.save(any())).willReturn(mockTask);
-        todoService.saveTask(vo);
+        //when
+        Task task = todoService.saveTask(vo);
+
+        //then
+        assertThat(task.getTitle(), is(title));
+        assertThat(task.getContent(), is(content));
     }
 
     @Test
@@ -91,10 +94,10 @@ public class TodoServiceTest {
 
         //then
         assertThat(todolistPage.getTotalElements(), is(equalTo(1L)));
-        assertThat(todolistPage.getContent().get(0).getTasks().getTitle(), is(title));
-        assertThat(todolistPage.getContent().get(0).getTasks().getExpectedDate(), is(expectedDate));
-        assertThat(todolistPage.getContent().get(0).getTasks().getComments().get(0).getContent(), is(content1));
-        assertThat(todolistPage.getContent().get(0).getTasks().getComments().get(1).getContent(), is(content2));
+        assertThat(todolistPage.getContent().get(0).getTask().getTitle(), is(title));
+        assertThat(todolistPage.getContent().get(0).getTask().getExpectedDate(), is(expectedDate));
+        assertThat(todolistPage.getContent().get(0).getTask().getComments().get(0).getContent(), is(content1));
+        assertThat(todolistPage.getContent().get(0).getTask().getComments().get(1).getContent(), is(content2));
     }
 
 }

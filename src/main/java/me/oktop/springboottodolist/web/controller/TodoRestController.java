@@ -1,6 +1,7 @@
 package me.oktop.springboottodolist.web.controller;
 
 import lombok.RequiredArgsConstructor;
+import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.service.TodoService;
 import me.oktop.springboottodolist.web.dto.ResponseDto;
 import me.oktop.springboottodolist.web.dto.TodoDto;
@@ -14,11 +15,12 @@ import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping(value = "/todo")
 public class TodoRestController {
 
     private final TodoService todoService;
 
-    @GetMapping("/todolist")
+    @GetMapping("/list")
     public ResponseDto getTodolist(@RequestParam Integer page) {
         int size = 10;
         PageRequest pageRequest = PageRequest.of(page, size);
@@ -26,17 +28,16 @@ public class TodoRestController {
         return ResponseDto.success(todoDtoPage);
     }
 
-    @PostMapping("/todo")
+    @PostMapping
     public ResponseDto saveTodo(@Valid @RequestBody TaskVo vo) {
-        todoService.saveTask(vo);
-        return ResponseDto.success();
+        Task task = todoService.saveTask(vo);
+        return ResponseDto.success(task);
     }
 
-    @PutMapping("/todo")
+    @PutMapping
     public ResponseDto updateTodo(@Valid @RequestBody TodoVo vo) {
-        todoService.updateTodo(vo);
-        return ResponseDto.success();
+        Task task = todoService.updateTodo(vo);
+        return ResponseDto.success(task);
     }
-
 
 }

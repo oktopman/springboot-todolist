@@ -7,13 +7,11 @@ import me.oktop.springboottodolist.enums.TaskStatus;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import me.oktop.springboottodolist.web.vo.TaskVo;
 import me.oktop.springboottodolist.web.vo.TodoVo;
-import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.ui.ModelMap;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
@@ -25,7 +23,7 @@ public class TodoService {
 
     private final TaskRepository taskRepository;
 
-    public void saveTask(TaskVo vo) {
+    public Task saveTask(TaskVo vo) {
         Task task = Task.builder()
                 .title(vo.getTitle())
                 .content(vo.getContent())
@@ -35,14 +33,15 @@ public class TodoService {
         if (vo.getExpectedDate() != null) {
             task.setExpectedDate(vo.getExpectedDate());
         }
-        taskRepository.save(task);
+        return taskRepository.save(task);
     }
 
-    public void updateTodo(TodoVo vo) {
+    public Task updateTodo(TodoVo vo) {
         Task task = taskRepository.findById(vo.getId())
                 .orElseThrow(EntityNotFoundException::new);
 
         task.update(vo);
+        return task;
     }
 
     public Page<TodoDto> getTodolist(Pageable pageable) {
@@ -57,7 +56,7 @@ public class TodoService {
         ModelMapper modelMapper = new ModelMapper();
         for (Task task : taskPage.getContent()) {
             TodoDto dto = new TodoDto();
-            dto.setTasks(task.toDto(modelMapper));
+            dto.setTask(task.toDto(modelMapper));
             todoDtoList.add(dto);
         }
         return todoDtoList;
