@@ -20,6 +20,13 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 @DataJpaTest
 public class CommentRepositoryTest {
 
+    private String title = "todolist 만들기";
+    private String content = "차근차근 요구사항 추가 시키면서 만들어보자~";
+    private TaskStatus status = TaskStatus.TODO;
+    private LocalDate expectedDate = LocalDate.of(2020, 03, 26);
+    private String commentContent1 = "추가적으로 코멘트도 저장하기";
+    private String commentContent2 = "추가적으로 코멘트도 저장하기2";
+
     @Autowired
     TaskRepository taskRepository;
 
@@ -29,10 +36,6 @@ public class CommentRepositoryTest {
     @Test
     void comment_저장후조회_테스트() {
         //given
-        String title = "todolist 만들기";
-        String content = "차근차근 요구사항 추가 시키면서 만들어보자~";
-        TaskStatus status = TaskStatus.TODO;
-        LocalDate expectedDate = LocalDate.of(2020, 03, 26);
         Task task = Task.builder()
                 .title(title)
                 .content(content)
@@ -42,11 +45,11 @@ public class CommentRepositoryTest {
         task.setExpectedDate(expectedDate);
 
         Comment comment = Comment.builder()
-                .content("추가적으로 코멘트도 저장하기")
+                .content(commentContent1)
                 .build();
 
         Comment comment2 = Comment.builder()
-                .content("추가2번")
+                .content(commentContent2)
                 .build();
 
         comment.addTask(task);
@@ -66,8 +69,45 @@ public class CommentRepositoryTest {
         assertThat(getTask.getStatus(), is(status));
         assertThat(getTask.getExpectedDate(), is(expectedDate));
         assertThat(getTask.getComments().size(), is(equalTo(2)));
-        assertThat(getTask.getComments().get(0).getContent(), is("추가적으로 코멘트도 저장하기"));
-        assertThat(getTask.getComments().get(1).getContent(), is("추가2번"));
+        assertThat(getTask.getComments().get(0).getContent(), is(commentContent1));
+        assertThat(getTask.getComments().get(1).getContent(), is(commentContent2));
+    }
+
+    @Test
+    void comment_수정_테스트() {
+        //given
+        Task task = Task.builder()
+                .title(title)
+                .content(content)
+                .status(status)
+                .build();
+
+        task.setExpectedDate(expectedDate);
+
+        Comment comment = Comment.builder()
+                .content(commentContent1)
+                .build();
+
+        Comment comment2 = Comment.builder()
+                .content(commentContent2)
+                .build();
+
+        comment.addTask(task);
+        comment2.addTask(task);
+
+        Task saveTask = taskRepository.save(task);
+        commentRepository.save(comment);
+        commentRepository.save(comment2);
+
+        //when
+        Task getTask = taskRepository.findById(saveTask.getId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        assertThat(getTask.getComments().get(0).getContent(), is(commentContent1));
+        String updateContent = "수정합니다.";
+        getTask.getComments().get(0).updateComment(updateContent);
+
+        assertThat(getTask.getComments().get(0).getContent(), is(updateContent));
     }
 
     @Test

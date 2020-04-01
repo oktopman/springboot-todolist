@@ -1,9 +1,9 @@
 package me.oktop.springboottodolist.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.service.TodoService;
 import me.oktop.springboottodolist.web.dto.ResponseDto;
+import me.oktop.springboottodolist.web.dto.TaskDto;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import me.oktop.springboottodolist.web.vo.TaskVo;
 import me.oktop.springboottodolist.web.vo.TodoVo;
@@ -31,15 +31,14 @@ public class TodoRestController {
 
     @PostMapping
     public ResponseEntity saveTodo(@Valid @RequestBody TaskVo vo) {
-        Task task = todoService.saveTask(vo);
-        return ResponseEntity.ok(ResponseDto.success(task));
+        TaskDto taskDto = todoService.saveTask(vo);
+        return ResponseEntity.ok(ResponseDto.success(taskDto));
     }
 
-    //todo pk를 pathvariable로 빼기
     @PutMapping("/{id}")
     public ResponseEntity updateTodo(@PathVariable Long id, @Valid @RequestBody TodoVo vo) {
-        Task task = todoService.updateTodo(id, vo);
-        return ResponseEntity.ok(ResponseDto.success(task));
+        TaskDto taskDto = todoService.updateTodo(new TodoVo(id, vo));
+        return ResponseEntity.ok(ResponseDto.success(taskDto));
     }
 
     @DeleteMapping("/{id}")

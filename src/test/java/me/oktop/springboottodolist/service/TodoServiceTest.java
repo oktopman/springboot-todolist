@@ -4,6 +4,7 @@ import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.enums.TaskStatus;
+import me.oktop.springboottodolist.web.dto.TaskDto;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import me.oktop.springboottodolist.web.vo.TaskVo;
 import org.junit.jupiter.api.Test;
@@ -54,11 +55,11 @@ public class TodoServiceTest {
 
         given(taskRepository.save(any())).willReturn(mockTask);
         //when
-        Task task = todoService.saveTask(vo);
+        TaskDto taskDto = todoService.saveTask(vo);
 
         //then
-        assertThat(task.getTitle(), is(title));
-        assertThat(task.getContent(), is(content));
+        assertThat(taskDto.getTitle(), is(title));
+        assertThat(taskDto.getContent(), is(content));
     }
 
     @Test

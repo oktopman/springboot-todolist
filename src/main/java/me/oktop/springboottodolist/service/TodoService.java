@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.domain.todo.TaskRepository;
 import me.oktop.springboottodolist.enums.TaskStatus;
+import me.oktop.springboottodolist.web.dto.TaskDto;
 import me.oktop.springboottodolist.web.dto.TodoDto;
 import me.oktop.springboottodolist.web.vo.TaskVo;
 import me.oktop.springboottodolist.web.vo.TodoVo;
@@ -25,7 +26,7 @@ public class TodoService {
 
     private final TaskRepository taskRepository;
 
-    public Task saveTask(TaskVo vo) {
+    public TaskDto saveTask(TaskVo vo) {
         Task task = Task.builder()
                 .title(vo.getTitle())
                 .content(vo.getContent())
@@ -35,15 +36,18 @@ public class TodoService {
         if (vo.getExpectedDate() != null) {
             task.setExpectedDate(vo.getExpectedDate());
         }
-        return taskRepository.save(task);
+        Task saveTask = taskRepository.save(task);
+        ModelMapper modelMapper = new ModelMapper();
+        return saveTask.toDto(modelMapper);
     }
 
-    public Task updateTodo(Long id, TodoVo vo) {
-        Task task = taskRepository.findById(id)
+    public TaskDto updateTodo(TodoVo vo) {
+        Task task = taskRepository.findById(vo.getId())
                 .orElseThrow(EntityNotFoundException::new);
 
         task.update(vo);
-        return task;
+        ModelMapper modelMapper = new ModelMapper();
+        return task.toDto(modelMapper);
     }
 
     public Page<TodoDto> getTodolist(Pageable pageable) {

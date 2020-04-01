@@ -13,6 +13,8 @@ import java.time.LocalDate;
 @Setter
 public class TodoVo {
 
+    private Long id;
+
     private String title;
 
     private String content;
@@ -20,5 +22,13 @@ public class TodoVo {
     private LocalDate expectedDate;
 
     private TaskStatus status;
+
+    public TodoVo(Long id, TodoVo vo) {
+        this.id = id;
+        this.title = vo.title;
+        this.content = vo.getContent();
+        this.expectedDate = vo.getExpectedDate();
+        this.status = vo.status;
+    }
 
 }

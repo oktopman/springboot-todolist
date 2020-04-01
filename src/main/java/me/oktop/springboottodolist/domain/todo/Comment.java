@@ -4,6 +4,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import me.oktop.springboottodolist.domain.BaseTimeEntity;
+import me.oktop.springboottodolist.web.dto.CommentDto;
+import org.springframework.beans.BeanUtils;
 
 import javax.persistence.*;
 
@@ -36,6 +38,17 @@ public class Comment extends BaseTimeEntity {
         }
         this.task = task;
         task.getComments().add(this);
+    }
+
+    public Comment updateComment(String content) {
+        this.content = content;
+        return this;
+    }
+
+    public CommentDto toDto() {
+        CommentDto dto = new CommentDto();
+        BeanUtils.copyProperties(this, dto);
+        return dto;
     }
 
 

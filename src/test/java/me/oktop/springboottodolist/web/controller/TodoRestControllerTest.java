@@ -1,6 +1,7 @@
 package me.oktop.springboottodolist.web.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jdk.nashorn.internal.ir.annotations.Ignore;
 import me.oktop.springboottodolist.domain.todo.Task;
 import me.oktop.springboottodolist.enums.TaskStatus;
 import me.oktop.springboottodolist.service.TodoService;
@@ -62,24 +63,60 @@ public class TodoRestControllerTest {
 
     @Test
     void todolist_저장_테스트() throws Exception {
+        //given
         TaskVo vo = new TaskVo(title, content);
         Task mockTask = Task.builder()
                 .title(title)
                 .content(content)
                 .build();
+
+        TaskDto dto = new TaskDto();
+        dto.setTitle(title);
+        dto.setContent(content);
+
         mockTask.setExpectedDate(expectedDate);
-        given(todoService.saveTask(any())).willReturn(mockTask);
+        given(todoService.saveTask(any())).willReturn(dto);
         ObjectMapper objectMapper = new ObjectMapper();
-        String mockContent = objectMapper.writeValueAsString(vo);
+
+        //when
         mockMvc.perform(
                 post("/todo")
-                        .content(mockContent)
+                        .content(objectMapper.writeValueAsString(vo))
 //                        .content("{\"title\":\"title입니다\", \"content\":\"content입니다.\", \"expectedDate\":\"2020-03-27\"}")
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.data.title", is(title)))
                 .andExpect(jsonPath("$.code", is("200")))
                 .andExpect(status().isOk());
+    }
+
+    @Ignore
+    @Test
+    void todo_수정_테스트() throws Exception {
+        String content = "content입니다.";
+        Long taskId = -1L;
+
+        TodoVo vo = new TodoVo();
+        vo.setContent(content);
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        TaskDto dto = new TaskDto();
+        dto.setTitle(title);
+        dto.setContent(content);
+
+        given(todoService.updateTodo(any(TodoVo.class))).willReturn(dto);
+
+        mockMvc.perform(
+                put("/todo/{id}", taskId)
+                        .content(objectMapper.writeValueAsString(vo))
+//                        .content("{\"id\":\1L, \"title\":\"title입니다.\", \"content\":\"content입니다.\"," +
+//                                " \"expectedDate\":\"2020-03-27\"}")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.title", is(title)))
+                .andExpect(jsonPath("$.data.content", is(content)))
+                .andExpect(jsonPath("$.code", is("200")))
+                .andDo(print());
     }
 
     @Test
@@ -120,23 +157,6 @@ public class TodoRestControllerTest {
         todoDtoList.add(todoDto);
         Pageable pageable = PageRequest.of(0, 10);
         return new PageImpl<>(todoDtoList, pageable, 1);
-    }
-
-    @Test
-    void todo_수정_테스트() throws Exception {
-        TodoVo vo = new TodoVo();
-        vo.setContent("content입니다.");
-        ObjectMapper objectMapper = new ObjectMapper();
-        String body = objectMapper.writeValueAsString(vo);
-        mockMvc.perform(
-                put("/todo/{id}", -1L)
-                        .content(body)
-//                        .content("{\"id\":\1L, \"title\":\"title입니다.\", \"content\":\"content입니다.\"," +
-//                                " \"expectedDate\":\"2020-03-27\"}")
-                        .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.code", is("200")))
-                .andDo(print());
     }
 
     @Test

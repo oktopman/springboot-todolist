@@ -1,12 +1,14 @@
 package me.oktop.springboottodolist.web.controller;
 
 import lombok.RequiredArgsConstructor;
-import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.service.CommentService;
+import me.oktop.springboottodolist.web.dto.CommentDto;
 import me.oktop.springboottodolist.web.dto.ResponseDto;
 import me.oktop.springboottodolist.web.vo.CommentVo;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RequiredArgsConstructor
 @RequestMapping(value = "/comment")
@@ -15,11 +17,16 @@ public class CommentRestController {
 
     private final CommentService commentService;
 
-    //todo pk를 pathvariable로 빼기, 사용하지않는 commentId 빼기
-    @PostMapping
-    public ResponseEntity saveComment(CommentVo vo) {
-        Comment comment = commentService.saveComment(vo);
-        return ResponseEntity.ok(ResponseDto.success(comment));
+    @PostMapping("/{taskId}")
+    public ResponseEntity saveComment(@PathVariable Long taskId, @Valid @RequestBody CommentVo vo) {
+        CommentDto commentDto = commentService.saveComment(new CommentVo(taskId, vo));
+        return ResponseEntity.ok(ResponseDto.success(commentDto));
+    }
+
+    @PutMapping("/{taskId}")
+    public ResponseEntity updateComment(@PathVariable Long taskId, @Valid @RequestBody CommentVo vo) {
+        CommentDto commentDto = commentService.updateComment(new CommentVo(taskId, vo));
+        return ResponseEntity.ok(ResponseDto.success(commentDto));
     }
 
     @DeleteMapping("/{id}")

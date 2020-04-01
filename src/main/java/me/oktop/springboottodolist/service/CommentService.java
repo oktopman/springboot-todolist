@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import me.oktop.springboottodolist.domain.todo.Comment;
 import me.oktop.springboottodolist.domain.todo.CommentRepository;
 import me.oktop.springboottodolist.domain.todo.TaskRepository;
+import me.oktop.springboottodolist.web.dto.CommentDto;
 import me.oktop.springboottodolist.web.vo.CommentVo;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,7 +19,7 @@ public class CommentService {
     private final TaskRepository taskRepository;
     private final CommentRepository commentRepository;
 
-    public Comment saveComment(CommentVo vo) {
+    public CommentDto saveComment(CommentVo vo) {
         boolean isExists = taskRepository.existsById(vo.getTaskId());
         if (!isExists) {
             throw new EntityNotFoundException();
@@ -27,7 +28,20 @@ public class CommentService {
                 .content(vo.getContent())
                 .build();
 
-        return commentRepository.save(comment);
+        Comment saveComment = commentRepository.save(comment);
+        return saveComment.toDto();
+    }
+
+    public CommentDto updateComment(CommentVo vo) {
+        boolean isExists = taskRepository.existsById(vo.getTaskId());
+        if (!isExists) {
+            throw new EntityNotFoundException();
+        }
+        Comment comment = commentRepository.findById(vo.getCommentId())
+                .orElseThrow(EntityNotFoundException::new);
+
+        Comment updateComment = comment.updateComment(vo.getContent());
+        return updateComment.toDto();
     }
 
     public void deleteComment(Long id) {

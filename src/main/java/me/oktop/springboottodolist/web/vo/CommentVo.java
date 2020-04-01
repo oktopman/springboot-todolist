@@ -11,11 +11,16 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class CommentVo {
 
-    @NotNull
     private Long taskId;
 
     private Long commentId;
 
     @NotNull
     private String content;
+
+    public CommentVo(Long taskId, CommentVo vo) {
+        this.taskId = taskId;
+        this.commentId = vo.commentId;
+        this.content = vo.getContent();
+    }
 }
