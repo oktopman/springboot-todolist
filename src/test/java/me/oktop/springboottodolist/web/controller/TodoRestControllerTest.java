@@ -125,12 +125,11 @@ public class TodoRestControllerTest {
     @Test
     void todo_수정_테스트() throws Exception {
         TodoVo vo = new TodoVo();
-        vo.setId(1L);
         vo.setContent("content입니다.");
         ObjectMapper objectMapper = new ObjectMapper();
         String body = objectMapper.writeValueAsString(vo);
         mockMvc.perform(
-                put("/todo")
+                put("/todo/{id}", -1L)
                         .content(body)
 //                        .content("{\"id\":\1L, \"title\":\"title입니다.\", \"content\":\"content입니다.\"," +
 //                                " \"expectedDate\":\"2020-03-27\"}")
@@ -143,9 +142,7 @@ public class TodoRestControllerTest {
     @Test
     void todo_삭제_테스트() throws Exception {
         mockMvc.perform(
-                delete("/todo/{id}", 1L)
-//                        .content("{\"id\":\1L, \"title\":\"title입니다.\", \"content\":\"content입니다.\"," +
-//                                " \"expectedDate\":\"2020-03-27\"}")
+                delete("/todo/{id}", -1L)
                         .contentType(MediaType.APPLICATION_JSON))
                 .andDo(print())
                 .andExpect(jsonPath("$.code", is("200")))

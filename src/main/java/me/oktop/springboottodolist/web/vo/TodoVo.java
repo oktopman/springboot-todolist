@@ -13,9 +13,6 @@ import java.time.LocalDate;
 @Setter
 public class TodoVo {
 
-    @NotNull
-    private Long id;
-
     private String title;
 
     private String content;

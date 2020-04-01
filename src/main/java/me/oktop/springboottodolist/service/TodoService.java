@@ -38,8 +38,8 @@ public class TodoService {
         return taskRepository.save(task);
     }
 
-    public Task updateTodo(TodoVo vo) {
-        Task task = taskRepository.findById(vo.getId())
+    public Task updateTodo(Long id, TodoVo vo) {
+        Task task = taskRepository.findById(id)
                 .orElseThrow(EntityNotFoundException::new);
 
         task.update(vo);

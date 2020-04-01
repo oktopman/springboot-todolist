@@ -11,8 +11,6 @@ import java.time.LocalDate;
 @Getter
 public class TaskVo {
 
-    private Long id;
-
     @NotNull
     private String title;
 
