@@ -9,6 +9,7 @@ import me.oktop.springboottodolist.web.vo.TaskVo;
 import me.oktop.springboottodolist.web.vo.TodoVo;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +25,7 @@ public class TodoRestController {
     @GetMapping("/list")
     public ResponseEntity getTodolist(@RequestParam Integer page) {
         int size = 10;
-        PageRequest pageRequest = PageRequest.of(page, size);
+        PageRequest pageRequest = PageRequest.of(page, size, Sort.by("createdDate").descending());
         Page<TodoDto> todoDtoPage = todoService.getTodolist(pageRequest);
         return ResponseEntity.ok(ResponseDto.success(todoDtoPage));
     }

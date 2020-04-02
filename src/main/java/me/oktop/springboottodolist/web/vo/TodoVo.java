@@ -21,6 +21,7 @@ public class TodoVo {
 
     private LocalDate expectedDate;
 
+    @NotNull
     private TaskStatus status;
 
     public TodoVo(Long id, TodoVo vo) {

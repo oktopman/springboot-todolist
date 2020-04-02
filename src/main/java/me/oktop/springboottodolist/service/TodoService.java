@@ -16,6 +16,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,9 +56,9 @@ public class TodoService {
 
     public Page<TodoDto> getTodolist(Pageable pageable) {
         Page<Task> taskPage = taskRepository.findAll(pageable);
-        long count = taskRepository.count();
+//        long count = taskRepository.count();
         List<TodoDto> todoDtoList = entityToDto(taskPage);
-        return new PageImpl<>(todoDtoList, pageable, count);
+        return new PageImpl<>(todoDtoList, pageable, taskPage.getTotalElements());
     }
 
     private List<TodoDto> entityToDto(Page<Task> taskPage) {
