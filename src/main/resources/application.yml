@@ -1,11 +1,11 @@
 # docker mysql
 spring:
-#  datasource:
-#    hikari:
-#      driver-class-name: com.mysql.jdbc.Driver
-#      jdbc-url: jdbc:mysql://localhost:3306/flo
-#      username: hayun
-#      password: password
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:3306/todolist?useUnicode=yes&characterEncoding=UTF-8&serverTimezone=Asia/Seoul
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      username: hayun
+      password: password
   jpa:
 #    database-platform: org.hibernate.dialect.H2Dialect
     properties:
