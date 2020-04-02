@@ -18,10 +18,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -90,7 +87,6 @@ public class TodoRestControllerTest {
                 .andExpect(status().isOk());
     }
 
-    @Ignore
     @Test
     void todo_수정_테스트() throws Exception {
         String content = "content입니다.";
@@ -98,6 +94,7 @@ public class TodoRestControllerTest {
 
         TodoVo vo = new TodoVo();
         vo.setContent(content);
+        vo.setStatus(TaskStatus.TODO);
         ObjectMapper objectMapper = new ObjectMapper();
 
         TaskDto dto = new TaskDto();
@@ -112,17 +109,18 @@ public class TodoRestControllerTest {
 //                        .content("{\"id\":\1L, \"title\":\"title입니다.\", \"content\":\"content입니다.\"," +
 //                                " \"expectedDate\":\"2020-03-27\"}")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
+                .andDo(print())
                 .andExpect(jsonPath("$.data.title", is(title)))
                 .andExpect(jsonPath("$.data.content", is(content)))
                 .andExpect(jsonPath("$.code", is("200")))
-                .andDo(print());
+                .andExpect(status().isOk());
+
     }
 
     @Test
     void todolist_조회_테스트() throws Exception {
         int page = 0;
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdDate").descending());
         given(todoService.getTodolist(pageable)).willReturn(createMock());
 
         mockMvc.perform(

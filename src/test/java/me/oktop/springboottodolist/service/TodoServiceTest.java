@@ -12,10 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 
 import java.time.LocalDate;
 import java.util.Collections;
@@ -85,10 +82,10 @@ public class TodoServiceTest {
         task.getComments().add(comment1);
         task.getComments().add(comment2);
 
-        Pageable pageable = PageRequest.of(0, 10);
+        Pageable pageable = PageRequest.of(0, 10, Sort.by("createdDate").descending());
         Page<Task> mockTaskPage = new PageImpl<>(Collections.singletonList(task), pageable, 1);
         given(taskRepository.findAll(pageable)).willReturn(mockTaskPage);
-        given(taskRepository.count()).willReturn(1L);
+//        given(taskRepository.count()).willReturn(1L);
 
         //when
         Page<TodoDto> todolistPage = todoService.getTodolist(pageable);
